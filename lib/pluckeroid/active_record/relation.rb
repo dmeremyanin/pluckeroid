@@ -54,13 +54,13 @@ module Pluckeroid
 
       protected
 
-      def pluck_columns(columns)
-        if columns.size.zero?
+      def pluck_columns(column_names)
+        if column_names.size.zero?
           raise ArgumentError, 'wrong number of arguments (0 for 1)', caller(1)
         end
 
-        columns = columns.map do |column_name|
-          if Symbol === column_name && column_names.include?(column_name.to_s)
+        column_names = column_names.map do |column_name|
+          if Symbol === column_name && self.column_names.include?(column_name.to_s)
             "#{connection.quote_table_name(table_name)}.#{connection.quote_column_name(column_name)}"
           else
             column_name.to_s
@@ -68,7 +68,7 @@ module Pluckeroid
         end
 
         relation = clone
-        relation.select_values = columns
+        relation.select_values = column_names
         klass.connection.select_all(relation.arel).map! do |attributes|
           yield klass.initialize_attributes(attributes)
         end
