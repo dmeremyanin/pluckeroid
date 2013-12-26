@@ -4,9 +4,14 @@ require 'spec_helper'
 
 describe Pluckeroid do
   context 'with a symbol' do
-    subject { Person.value_of :id }
+    subject { Person.pluck(:id) }
     it { should have(100).ids }
-    it { should eq((1..100).to_a) }
+    it { should eq (1..100).to_a }
+  end
+
+  context 'with a symbol and joined association with the same attributes' do
+    subject { lambda { Person.joins(:widgets).pluck(:extra_info) }}
+    it { should_not raise_error }
   end
 
   context 'with a string' do
