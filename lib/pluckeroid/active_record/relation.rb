@@ -35,7 +35,7 @@ module Pluckeroid
       #   # => [[1, 'Obi-Wan'], [2, 'Luke']]
       #
       def pluck(*column_names)
-        flatten = column_names.size == 1
+        flatten = column_names.one?
 
         pluck_columns(column_names) do |attributes|
           values = attributes.map do |key, _|
