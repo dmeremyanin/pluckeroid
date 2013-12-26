@@ -1,4 +1,4 @@
-# Pluckeroid
+# Pluckeroid [![Build Status](https://travis-ci.org/dimko/pluckeroid.png?branch=master)](https://travis-ci.org/dimko/pluckeroid)
 
 Pluck for ActiveRecord on steroids
 
