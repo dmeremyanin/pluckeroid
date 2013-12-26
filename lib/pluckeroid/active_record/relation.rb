@@ -29,10 +29,10 @@ module Pluckeroid
       # Examples:
       #
       #   Person.pluck(:id) # SELECT people.id FROM people
-      #   => [1, 2]
+      #   # => [1, 2]
       #
       #   Person.pluck(:id, :name) # SELECT people.id, people.name FROM people
-      #   => [[1, 'Obi-Wan'], [2, 'Luke']]
+      #   # => [[1, 'Obi-Wan'], [2, 'Luke']]
       #
       def pluck(*column_names)
         flatten = column_names.size == 1
