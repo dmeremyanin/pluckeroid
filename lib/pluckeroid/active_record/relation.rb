@@ -56,7 +56,7 @@ module Pluckeroid
 
       def pluck_columns(columns)
         if columns.size.zero?
-          raise ArgumentError, 'wrong number of arguments (0 for 1)'
+          raise ArgumentError, 'wrong number of arguments (0 for 1)', caller(1)
         end
 
         columns = columns.map do |column_name|
