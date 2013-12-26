@@ -24,7 +24,7 @@ module Pluckeroid
       end
 
       # Same as +pluck_attributes+ but returns <tt>Array</tt> with values
-      # of the specified column name.
+      # of the specified column names.
       #
       # Examples:
       #
