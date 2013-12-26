@@ -3,6 +3,11 @@ require 'spec_helper'
 # From valium
 
 describe Pluckeroid do
+  context 'without arguments' do
+    subject { lambda { Person.pluck }}
+    it { should raise_error }
+  end
+
   context 'with a symbol' do
     subject { Person.pluck(:id) }
     it { should have(100).ids }
