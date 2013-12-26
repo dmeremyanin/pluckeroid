@@ -15,9 +15,14 @@ describe Pluckeroid do
   end
 
   context 'with a string' do
-    subject { Person.value_of 'id' }
+    subject { Person.pluck('id') }
     it { should have(100).ids }
-    it { should eq((1..100).to_a) }
+    it { should eq (1..100).to_a }
+  end
+
+  context 'with a string and joined association with the same attributes' do
+    subject { lambda { Person.joins(:widgets).pluck('extra_info') }}
+    it { should raise_error }
   end
 
   context 'with multiple values' do
