@@ -30,6 +30,9 @@ Person.pluck(:id, :name)
 
 Person.pluck_attributes(:id, :name)
 # => [{ 'id' => 1, 'name' => 'Obi-Wan' }, { 'id' => 2, 'name' => 'Luke' }]
+
+Person.pluck_attributes(:id, :name, :column_mappings => { 'id' => 'person_id' })
+# => [{ 'person_id' => 1, 'name' => 'Obi-Wan' }, { 'person_id' => 2, 'name' => 'Luke' }]
 ```
 
 ## Contributing

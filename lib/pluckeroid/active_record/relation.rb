@@ -14,11 +14,23 @@ module Pluckeroid
       #   Person.pluck_attributes(:id, :name) # SELECT people.id, people.name FROM people
       #   # => [{ 'id' => 1, 'name' => 'Obi-Wan' }, { 'id' => 2, 'name' => 'Luke' }]
       #
+      # You can also re-map/alias attributes:
       #
-      def pluck_attributes(*column_names)
+      #   Person.pluck(:id, :column_mappings => { 'id' => 'person_id' }) # SELECT people.id FROM people
+      #   # => [{ 'person_id' => 1 }, { 'person_id' => 2 }]
+      #
+      #   Person.pluck_attributes(:id, :name, :column_mappings => { 'id' => 'person_id' }) # SELECT people.id, people.name FROM people
+      #   # => [{ 'person_id' => 1, 'name' => 'Obi-Wan' }, { 'person_id' => 2, 'name' => 'Luke' }]
+      #
+      def pluck_attributes(*args)
+        options, column_names = extract_options_and_column_names(args)
+        column_mappings = extract_column_mappings(options)
         pluck_columns(column_names) do |attributes|
-          attributes.each do |key, _|
-            attributes[key] = klass.type_cast_attribute(key, attributes)
+          HashWithIndifferentAccess.new.tap do |mapped_attributes|
+            attributes.each do |key, _|
+              mapped_attributes[column_mappings[key] || key] = \
+                klass.type_cast_attribute(key, attributes)
+            end
           end
         end
       end
@@ -72,6 +84,16 @@ module Pluckeroid
         klass.connection.select_all(relation.arel).map! do |attributes|
           yield klass.initialize_attributes(attributes)
         end
+      end
+
+      private
+
+      def extract_options_and_column_names(args)
+        [args.last.is_a?(Hash) ? args.pop : {}, args]
+      end
+
+      def extract_column_mappings(options)
+        (options[:column_mappings] || {}).with_indifferent_access
       end
     end
   end

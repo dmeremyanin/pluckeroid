@@ -28,6 +28,16 @@ describe Pluckeroid do
     it { should raise_error }
   end
 
+  context 'without column mappings' do
+    subject { Person.pluck_attributes('id') }
+    it { should eq (1..100).map {|n| {'id' => n}} }
+  end
+
+  context 'with column mappings' do
+    subject { Person.pluck_attributes('id', :column_mappings => {'id' => 'person_id'}) }
+    it { should eq (1..100).map {|n| {'person_id' => n}} }
+  end
+
   context 'with multiple values' do
     subject { Person.values_of :id, :last_name }
     it { should eq (1..100).map {|n| [n, "Number#{n}"]} }
