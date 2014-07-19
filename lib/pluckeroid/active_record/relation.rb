@@ -93,7 +93,7 @@ module Pluckeroid
       end
 
       def extract_column_mappings(options)
-        (options[:column_mappings] || {}).with_indifferent_access
+        (options[:column_mappings] || {}).stringify_keys
       end
     end
   end
