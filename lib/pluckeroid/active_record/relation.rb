@@ -25,12 +25,12 @@ module Pluckeroid
       def pluck_attributes(*args)
         options, column_names = extract_options_and_column_names(args)
         column_mappings = extract_column_mappings(options)
+        map_attributes = column_mappings.present?
         pluck_columns(column_names) do |attributes|
-          HashWithIndifferentAccess.new.tap do |mapped_attributes|
-            attributes.each do |key, _|
-              mapped_attributes[column_mappings[key] || key] = \
-                klass.type_cast_attribute(key, attributes)
-            end
+          if map_attributes
+            type_cast_attributes_with_mapping(attributes, column_mappings)
+          else
+            type_cast_attributes_without_mapping(attributes)
           end
         end
       end
@@ -88,12 +88,27 @@ module Pluckeroid
 
       private
 
+      def extract_column_mappings(options)
+        options[:column_mappings].try(:stringify_keys)
+      end
+
       def extract_options_and_column_names(args)
         [args.last.is_a?(Hash) ? args.pop : {}, args]
       end
 
-      def extract_column_mappings(options)
-        (options[:column_mappings] || {}).stringify_keys
+      def type_cast_attributes_with_mapping(attributes, column_mappings)
+        {}.tap do |mapped|
+          attributes.each do |key, _|
+            mapped[column_mappings[key] || key] = \
+              klass.type_cast_attribute(key, attributes)
+          end
+        end
+      end
+
+      def type_cast_attributes_without_mapping(attributes)
+        attributes.each do |key, _|
+          attributes[key] = klass.type_cast_attribute(key, attributes)
+        end
       end
     end
   end
